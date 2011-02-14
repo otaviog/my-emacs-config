@@ -1,0 +1,3 @@
+(defconst emacs-d-dir "c:/Users/otavio/Projects/my-emacs-config/dot_emacs.d")
+(load-file "c:/Users/otavio/Projects/my-emacs-config/dot_emacs")
+
