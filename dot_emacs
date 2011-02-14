@@ -21,10 +21,14 @@
  '(x-select-enable-clipboard nil))
 
 ;; -------------------- Extra loads  --------------------------
-(add-to-list 'load-path "~/.emacs.d/plugins")
-(add-to-list 'load-path "~/.emacs.d/plugins/autocomplete")
-(add-to-list 'load-path "~/.emacs.d/plugins/color-theme-6.6.0")
 
+(if (not (boundp 'emacs-d-dir))
+    (defconst emacs-d-dir "~/.emacs.d"))
+
+(add-to-list 'load-path (concat emacs-d-dir "/plugins/"))
+(add-to-list 'load-path (concat emacs-d-dir "/plugins/autocomplete/"))
+(add-to-list 'load-path (concat emacs-d-dir "/plugins/color-theme-6.6.0/"))
+    
 (require 'yasnippet)
 (require 'glsl-mode)
 (require 'cuda-mode)
@@ -146,7 +150,7 @@
 (defun my-c-mode-hook ()
   (setq indent-tabs-mode nil)
   (setq c-indent-level 4)
-  (local-set-key (kbd "C-c o") 'switch-decl-impl))  
+  (local-set-key (kbd "C-c o") 'switch-decl-impl))
 
 (add-hook 'c-mode-common-hook 'my-c-mode-hook)
 (add-hook 'c++-mode-common-hook 'my-c-mode-hook)
@@ -156,7 +160,7 @@
   (setq ac-auto-start nil)
   (setq ac-expand-on-auto-complete nil)
   (setq ac-quick-help-delay 0.3)
-  (define-key c-mode-base-map (kbd "M-;") 'ac-complete-clang))  
+  (define-key c-mode-base-map (kbd "C-;") 'ac-complete-clang))  
 
 (let ((clang-exec (executable-find "clang")))
   (if clang-exec
@@ -167,5 +171,6 @@
               
 (when (load "flymake" t)
   (add-to-list 'flymake-allowed-file-name-masks
-               '("\\.hpp\\'" flymake-master-make-header-init flymake-master-cleanup)))
+               '("\\.hpp\\'" flymake-master-make-header-init 
+		 flymake-master-cleanup)))
 (setq gdb-many-windows t)

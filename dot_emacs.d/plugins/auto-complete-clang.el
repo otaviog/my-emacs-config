@@ -66,7 +66,7 @@
     (when (stringp clang-completion-pch)
       (setq cmd (append cmd (list "-include-pch" clang-completion-pch))))
     (message (format "complete at %s:%s:%s" filename row col))
-    (clang-process-exec cmd)))
+    (clang-process-exec cmd))
 
 (defun clang-get-process-result (string)
   (let* ((completion-lines (split-string string "\n")))
