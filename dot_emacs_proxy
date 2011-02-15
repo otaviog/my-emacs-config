@@ -1,3 +1,4 @@
-(defconst emacs-d-dir "c:/Users/otavio/Projects/my-emacs-config/dot_emacs.d")
-(load-file "c:/Users/otavio/Projects/my-emacs-config/dot_emacs")
+(defconst m-emacs-proj-dir "c:/Users/otavio/Projects/my-emacs-config")
+(defconst emacs-d-dir (concat m-emacs-proj-dir "/dot_emacs.d"))
+(load-file (concat m-emacs-proj-dir "/dot_emacs"))
 
