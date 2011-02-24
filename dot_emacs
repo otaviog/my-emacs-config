@@ -2,10 +2,10 @@
 (if (eq system-type 'windows-nt)
     (progn
       (defconst m-make-command "nmake")
-      (defconst m-c-obj-ext ".obj"))
+      (defconst m-c-obj-ext "obj"))
   (progn
     (defconst m-make-command "make")
-    (defconst m-c-obj-ext ".o")))
+    (defconst m-c-obj-ext "o")))
 
 ;; ------------ Custom Variables ------
 (custom-set-variables
@@ -35,6 +35,7 @@
 (require 'ws-trim)
 (require 'auto-complete)
 (require 'auto-complete-clang)
+(autoload 'magit-status "magit" nil t)
 
 ;; ------------------- My Functions ----------------------------
 (defun m-compile-unit ()
@@ -118,7 +119,7 @@
 ;; ------------------ Color Theme -----------------------
 (require 'color-theme)
 (color-theme-initialize)
-(color-theme-aliceblue)
+(color-theme-comidia)
 
 ;; ------------------- Key bindings ---------------------------
 (global-set-key [f2] 'eshell)
@@ -154,7 +155,10 @@
 (defun my-c-mode-hook ()
   (setq indent-tabs-mode nil)
   (setq c-indent-level 4)
-  (local-set-key (kbd "C-c o") 'switch-decl-impl))
+  (local-set-key (kbd "C-c o") 'switch-decl-impl)
+  (linum-mode)
+  (if (file-exists-p "Makefile")
+      (flymake-mode)))
 
 (add-hook 'c-mode-common-hook 'my-c-mode-hook)
 (add-hook 'c++-mode-common-hook 'my-c-mode-hook)
