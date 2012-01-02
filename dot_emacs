@@ -1,8 +1,8 @@
 ;; ------------ OS custom ------------
 (if (eq system-type 'windows-nt)
     (progn
-      (defconst m-make-command "nmake")
-      (defconst m-c-obj-ext "obj"))
+      (defconst m-make-command "msbuild")
+      (defconst m-c-obj-ext "obj"))  
   (progn
     (defconst m-make-command "make")
     (defconst m-c-obj-ext "o")))
@@ -10,7 +10,6 @@
 ;; ------------ Custom Variables ------
 (custom-set-variables
  '(case-fold-search t)
- '(current-language-environment "ASCII")
  '(global-font-lock-mode t nil (font-lock))
  '(mouse-wheel-mode t nil (mwheel))
  '(show-paren-mode t nil (paren))
@@ -18,7 +17,8 @@
  '(uniquify-buffer-name-style (quote forward) nil (uniquify))
  '(desktop-buffers-not-to-save "\\(^nn\\.a[0-9]+\\|\\.log\\|(ftp)\\|.*_flymake.*\\)$")
  '(desktop-files-not-to-save "^/[^/:]*:\\|.*_flymake\\..*")
- '(x-select-enable-clipboard nil))
+;; '(x-select-enable-clipboard nil)
+)
 
 ;; -------------------- Extra loads  --------------------------
 
@@ -27,17 +27,23 @@
 
 (add-to-list 'load-path (concat emacs-d-dir "/plugins/"))
 (add-to-list 'load-path (concat emacs-d-dir "/plugins/autocomplete/"))
+(add-to-list 'load-path (concat emacs-d-dir "/plugins/yasnippet/"))
 (add-to-list 'load-path (concat emacs-d-dir "/plugins/color-theme-6.6.0/"))
     
 (require 'yasnippet)
+(yas/global-mode 1)
 (require 'glsl-mode)
 (require 'cuda-mode)
 (require 'ws-trim)
 (require 'auto-complete)
 (require 'auto-complete-clang)
+(require 'google-c-style)
 (autoload 'magit-status "magit" nil t)
 
 ;; ------------------- My Functions ----------------------------
+
+(setq compile-command m-make-command)
+
 (defun m-compile-unit ()
   (interactive)
   (let ((buf-name (buffer-name)))
@@ -99,12 +105,11 @@
              (concat "#%" (buffer-name) "#")))))
 
 ;; ------------------ Prefs ---------------------------------
-(put 'narrow-to-region 'disabled nil)
-(put 'set-goal-column 'disabled nil)
+;;(put 'narrow-to-region 'disabled nil)
+;;(put 'set-goal-column 'disabled nil)
 (menu-bar-mode 0)
 (tool-bar-mode 0)
 (scroll-bar-mode)
-
 (setq-default tab-width 4)
 
 (set-buffer-file-coding-system 'utf-8 'utf-8-unix)
@@ -147,9 +152,10 @@
     (c-space-always-indent . t)
     (c-basic-offset . 4))
   "My C++ Style")
-
 (c-add-style "my" m-c-style)
-(setq c-default-style '((c++-mode . "my") (c-mode . "my")))
+(c-add-style "Google" google-c-style)
+
+(setq c-default-style '((c++-mode . "google") (c-mode . "google")))
 (setq-default indent-tabs-mode nil)
 
 (defun my-c-mode-hook ()
@@ -160,6 +166,7 @@
   (if (file-exists-p "Makefile")
       (flymake-mode)))
 
+;;(add-hook 'c-mode-common-hook 'google-set-c-style)
 (add-hook 'c-mode-common-hook 'my-c-mode-hook)
 (add-hook 'c++-mode-common-hook 'my-c-mode-hook)
 
