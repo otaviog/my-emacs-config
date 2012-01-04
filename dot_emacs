@@ -38,6 +38,10 @@
 (require 'auto-complete)
 (require 'auto-complete-clang)
 (require 'google-c-style)
+(require 'cmake-mode)
+(setq auto-mode-alist
+      (append '(("CMakeLists\\.txt\\'" . cmake-mode)
+                ("\\.cmake\\'" . cmake-mode))
 (autoload 'magit-status "magit" nil t)
 
 ;; ------------------- My Functions ----------------------------
