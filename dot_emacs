@@ -39,9 +39,8 @@
 (require 'auto-complete-clang)
 (require 'google-c-style)
 (require 'cmake-mode)
-(setq auto-mode-alist
-      (append '(("CMakeLists\\.txt\\'" . cmake-mode)
-                ("\\.cmake\\'" . cmake-mode))))
+(add-to-list 'auto-mode-alist '("CMakeLists\\.txt\\'" . cmake-mode))
+(add-to-list 'auto-mode-alist '("\\.cmake\\'" . cmake-mode))
 (autoload 'magit-status "magit" nil t)
 
 ;; ------------------- My Functions ----------------------------
@@ -178,7 +177,7 @@
   (if (file-exists-p "Makefile")
       (flymake-mode)))
 
-;;(add-hook 'c-mode-common-hook 'google-set-c-style)
+(add-hook 'c-mode-common-hook 'google-set-c-style)
 (add-hook 'c-mode-common-hook 'my-c-mode-hook)
 (add-hook 'c++-mode-common-hook 'my-c-mode-hook)
 
