@@ -39,13 +39,14 @@
 (require 'auto-complete-clang)
 (require 'google-c-style)
 (require 'cmake-mode)
+
 (setq auto-mode-alist
       (append '(("CMakeLists\\.txt\\'" . cmake-mode)
-                ("\\.cmake\\'" . cmake-mode))
+                ("\\.cmake\\'" . cmake-mode))))
+
 (autoload 'magit-status "magit" nil t)
 
 ;; ------------------- My Functions ----------------------------
-
 (setq compile-command m-make-command)
 
 (defun m-compile-unit ()
@@ -78,7 +79,6 @@
                     (find-file cur-filename))))))))
 
 ;; ------------------ Backup and Autosaves --------------------------------
-
 ;; backup
 (defconst m-save-dir "~/.saves")
 (make-directory m-save-dir t)
