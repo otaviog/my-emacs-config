@@ -42,10 +42,8 @@
 (require 'fill-column-indicator)
 
 (require 'cmake-mode)
-(setq auto-mode-alist
-      (append '(("CMakeLists\\.txt\\'" . cmake-mode)
-                ("\\.cmake\\'" . cmake-mode))))
-
+(add-to-list 'auto-mode-alist '("CMakeLists\\.txt\\'" . cmake-mode))
+(add-to-list 'auto-mode-alist '("\\.cmake\\'" . cmake-mode))
 (autoload 'magit-status "magit" nil t)
 
 ;; ------------------- My Functions ----------------------------
