@@ -2,7 +2,7 @@
 (if (eq system-type 'windows-nt)
     (progn
       (defconst m-make-command "msbuild")
-      (defconst m-c-obj-ext "obj"))  
+      (defconst m-c-obj-ext "obj"))
   (progn
     (defconst m-make-command "make")
     (defconst m-c-obj-ext "o")))
@@ -29,7 +29,7 @@
 (add-to-list 'load-path (concat emacs-d-dir "/plugins/autocomplete/"))
 (add-to-list 'load-path (concat emacs-d-dir "/plugins/yasnippet/"))
 (add-to-list 'load-path (concat emacs-d-dir "/plugins/color-theme-6.6.0/"))
-    
+
 (require 'yasnippet)
 (yas/global-mode 1)
 (require 'glsl-mode)
@@ -38,8 +38,10 @@
 (require 'auto-complete)
 (require 'auto-complete-clang)
 (require 'google-c-style)
-(require 'cmake-mode)
+(setq fci-rule-column 80)
+(require 'fill-column-indicator)
 
+(require 'cmake-mode)
 (setq auto-mode-alist
       (append '(("CMakeLists\\.txt\\'" . cmake-mode)
                 ("\\.cmake\\'" . cmake-mode))))
@@ -67,7 +69,7 @@
            (file-suffix (file-name-extension buffer-file-name))
            (decl-suffixes '(".h" ".hpp" ".hh" ".vert"))
            (impl-suffixes '(".c" ".cpp" ".cc" ".C" ".frag" ".cu" ".cl"))
-           (search-dirs '("" "../src" "../include"))
+           (search-dirs '("" "../src" "../include" "../include/ud" "../../src"))
            (chck-suffixes (cond ((string-match file-suffix (mapconcat 'identity impl-suffixes "\\|"))
                                  decl-suffixes)
                                 ((string-match file-suffix (mapconcat 'identity decl-suffixes "\\|"))
@@ -77,6 +79,12 @@
             (let ((cur-filename (concat file-dir cur-dir "/" file-name cur-suffix)))
                 (if (file-exists-p cur-filename)
                     (find-file cur-filename))))))))
+
+(defun m-flymake-it ()
+  (interactive)
+  (let ((flymake-it (executable-find "flymake-it")))
+    (if flymake-it
+        (call-process flymake-it))))
 
 ;; ------------------ Backup and Autosaves --------------------------------
 ;; backup
@@ -123,11 +131,13 @@
 (prefer-coding-system 'utf-8-unix)
 (setq visible-bell t)
 
-(add-hook 'kill-buffer-hook 'whitespace-cleanup)
+(add-hook 'before-save-hook '(lambda () (whitespace-cleanup)))
 
 ;; ------------------ Color Theme -----------------------
 (require 'color-theme)
 (color-theme-initialize)
+(color-theme-infodoc)
+;;(color-theme-jb-simple)
 (color-theme-comidia)
 
 ;; ------------------- Key bindings ---------------------------
@@ -138,7 +148,7 @@
     (progn
       (global-set-key [f5] 'previous-error)
       (global-set-key [f6] 'next-error)
-      (global-set-key [f7] 'compile))      
+      (global-set-key [f7] 'compile))
   (progn
     (global-set-key [f9] 'previous-error)
     (global-set-key [f10] 'next-error)
@@ -167,10 +177,12 @@
   (setq c-indent-level 4)
   (local-set-key (kbd "C-c o") 'switch-decl-impl)
   (linum-mode)
+  (column-number-mode)
+  (fci-mode)
   (if (file-exists-p "Makefile")
       (flymake-mode)))
 
-;;(add-hook 'c-mode-common-hook 'google-set-c-style)
+(add-hook 'c-mode-common-hook 'google-set-c-style)
 (add-hook 'c-mode-common-hook 'my-c-mode-hook)
 (add-hook 'c++-mode-common-hook 'my-c-mode-hook)
 
@@ -179,7 +191,7 @@
   (setq ac-auto-start nil)
   (setq ac-expand-on-auto-complete nil)
   (setq ac-quick-help-delay 0.3)
-  (define-key c-mode-base-map (kbd "C-;") 'ac-complete-clang))  
+  (define-key c-mode-base-map (kbd "C->") 'ac-complete-clang))
 
 (let ((clang-exec (executable-find "clang")))
   (if clang-exec
@@ -187,9 +199,9 @@
         (require 'auto-complete-clang)
         (add-hook 'c-mode-common-hook 'my-cmode-clang-hook)
         (add-hook 'c++-mode-common-hook 'my-cmode-clang-hook))))
-              
-(when (load "flymake" t)
-  (add-to-list 'flymake-allowed-file-name-masks
-               '("\\.hpp\\'" flymake-master-make-header-init 
-		 flymake-master-cleanup)))
+
+;;(when (load "flymake" t)
+;;  (add-to-list 'flymake-allowed-file-name-masks
+;;;               '("\\.hpp\\'" flymake-master-make-header-init
+;;       flymake-master-cleanup)))
 (setq gdb-many-windows t)
