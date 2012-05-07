@@ -38,6 +38,7 @@
 (require 'auto-complete)
 (require 'auto-complete-clang)
 (require 'google-c-style)
+(require 'compile)
 (setq fci-rule-column 80)
 (require 'fill-column-indicator)
 
@@ -199,6 +200,12 @@
         (require 'auto-complete-clang)
         (add-hook 'c-mode-common-hook 'my-cmode-clang-hook)
         (add-hook 'c++-mode-common-hook 'my-cmode-clang-hook))))
+
+;;(add-hook 'c++-mode-common-hook 'my-cmode-clang-hook)
+;;(add-hook 'c-mode-common-hook 'my-cmode-clang-hook)
+;;(add-to-list 'compilation-error-regexp-alist
+;;             '(anoying-gcc "^In file included from \\(.*\\):\\([0-9]+\\)" 1 2))
+
 
 ;;(when (load "flymake" t)
 ;;  (add-to-list 'flymake-allowed-file-name-masks
