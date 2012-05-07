@@ -48,7 +48,6 @@
 (autoload 'magit-status "magit" nil t)
 
 ;; ------------------- My Functions ----------------------------
-
 (setq compile-command m-make-command)
 
 (defun m-compile-unit ()
@@ -87,7 +86,6 @@
         (call-process flymake-it))))
 
 ;; ------------------ Backup and Autosaves --------------------------------
-
 ;; backup
 (defconst m-save-dir "~/.saves")
 (make-directory m-save-dir t)
