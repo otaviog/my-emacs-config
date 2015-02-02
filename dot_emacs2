@@ -7,6 +7,8 @@
     (defconst m-make-command "make")
     (defconst m-c-obj-ext "o")))
 
+(add-to-list 'load-path (concat emacs-d-dir "/color-themes"))
+(require 'firecode-theme)
 ;; ------------ Custom Variables ------
 (custom-set-variables
  '(inhibit-startup-screen t)
@@ -19,38 +21,12 @@
  '(desktop-buffers-not-to-save "\\(^nn\\.a[0-9]+\\|\\.log\\|(ftp)\\|.*_flymake.*\\)$")
  '(desktop-files-not-to-save "^/[^/:]*:\\|.*_flymake\\..*")
 ;; '(x-select-enable-clipboard nil)
-)
+ )
 
-;; -------------------- Extra loads  --------------------------
+(package-initialize)
 
-(if (not (boundp 'emacs-d-dir))
-    (defconst emacs-d-dir "~/.emacs.d"))
-
-(add-to-list 'load-path (concat emacs-d-dir "/plugins/"))
-(add-to-list 'load-path (concat emacs-d-dir "/plugins/autocomplete/"))
-(add-to-list 'load-path (concat emacs-d-dir "/plugins/yasnippet/"))
-(add-to-list 'load-path (concat emacs-d-dir "/plugins/color-theme-6.6.0/"))
-
-(require 'yasnippet)
-(yas/global-mode 1)
-(require 'glsl-mode)
-(require 'cuda-mode)
-(require 'ws-trim)
-(require 'auto-complete)
-(require 'auto-complete-clang)
-(require 'google-c-style)
-(require 'compile)
-(setq fci-rule-column 80)
-(require 'fill-column-indicator)
-(elpy-enable)
-(require 'cmake-mode)
-(add-to-list 'auto-mode-alist '("CMakeLists\\.txt\\'" . cmake-mode))
-(add-to-list 'auto-mode-alist '("\\.cmake\\'" . cmake-mode))
-(autoload 'magit-status "magit" nil t)
-
-;; ------------------- My Functions ----------------------------
+;; -------------- C stuff --------------------
 (setq compile-command m-make-command)
-
 (defun m-compile-unit ()
   (interactive)
   (let ((buf-name (buffer-name)))
@@ -133,13 +109,6 @@
 
 (add-hook 'before-save-hook '(lambda () (whitespace-cleanup)))
 
-;; ------------------ Color Theme -----------------------
-(require 'color-theme)
-(color-theme-initialize)
-(color-theme-infodoc)
-;;(color-theme-jb-simple)
-(color-theme-comidia)
-
 ;; ------------------- Key bindings ---------------------------
 (global-set-key [f2] 'eshell)
 (global-set-key [f3] 'ispell-region)
@@ -167,7 +136,6 @@
     (c-basic-offset . 4))
   "My C++ Style")
 (c-add-style "my" m-c-style)
-(c-add-style "Google" google-c-style)
 
 (setq c-default-style '((c++-mode . "google") (c-mode . "google")))
 (setq-default indent-tabs-mode nil)
@@ -213,8 +181,7 @@
 (setq gdb-many-windows t)
 
 ;;; Python Mode
-(package-initialize)
-;; (elpy-enable)
+
 
 (setq
  python-shell-interpreter "ipython"
