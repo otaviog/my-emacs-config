@@ -123,9 +123,9 @@
   (auto-fill-mode 80)
   (irony-mode)
   (flycheck-mode)
-  (company-mode)
   (abbrev-mode)
   (column-enforce-mode)
+  (company-mode)
   )
 
 (add-hook 'c-mode-common-hook 'my-c-mode-hook)
@@ -172,3 +172,5 @@
 (global-set-key (kbd "s-r") 'flymake-display-err-menu-for-current-line)
 (global-set-key (kbd "s-c") 'flymake-compile)
 (global-set-key "\C-x\C-b" 'electric-buffer-list)
+(global-set-key "\C-x\C-b" 'electric-buffer-list)
+(global-set-key (kbd "C-c RET") 'company-complete-common)
