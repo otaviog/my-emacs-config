@@ -174,3 +174,5 @@
 (global-set-key "\C-x\C-b" 'electric-buffer-list)
 (global-set-key "\C-x\C-b" 'electric-buffer-list)
 (global-set-key (kbd "C-c RET") 'company-complete-common)
+
+(setq irony-additional-clang-options "-std=c++11")
