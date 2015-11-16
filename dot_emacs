@@ -139,6 +139,8 @@
 (eval-after-load 'flycheck
   '(add-to-list 'flycheck-checkers 'irony))
 
+(setq irony-additional-clang-options (quote ("-std=c++11" "-stdlib=libc++")))
+
 (setq gdb-many-windows t)
 
 ;; ----------------------- Python programming --------------------------
@@ -174,5 +176,3 @@
 (global-set-key "\C-x\C-b" 'electric-buffer-list)
 (global-set-key "\C-x\C-b" 'electric-buffer-list)
 (global-set-key (kbd "C-c RET") 'company-complete-common)
-
-(setq irony-additional-clang-options "-std=c++11")
