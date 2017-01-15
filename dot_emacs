@@ -21,13 +21,14 @@
 					 irony company-irony company-irony-c-headers flycheck-irony
 					 flycheck
 					 elpy py-autopep8 ein
+					 google-style
 					 magit))
 
-; fetch the list of packages available
+										; fetch the list of packages available
 (unless package-archive-contents
   (package-refresh-contents))
 
-; install the missing packages
+										; install the missing packages
 (dolist (package package-list)
   (unless (package-installed-p package)
     (package-install package)))
@@ -90,14 +91,14 @@
                                  decl-suffixes)
                                 ((string-match file-suffix (mapconcat 'identity decl-suffixes "\\|"))
                                  impl-suffixes))))
-        (dolist (cur-suffix chck-suffixes)
-          (dolist (cur-dir search-dirs)
-            (let ((cur-filename (concat file-dir cur-dir "/" file-name cur-suffix)))
-                (if (file-exists-p cur-filename)
-                    (find-file cur-filename))))))))
+	  (dolist (cur-suffix chck-suffixes)
+		(dolist (cur-dir search-dirs)
+		  (let ((cur-filename (concat file-dir cur-dir "/" file-name cur-suffix)))
+			(if (file-exists-p cur-filename)
+				(find-file cur-filename))))))))
 
-; C++ Mode
-; --------
+										; C++ Mode
+										; --------
 
 (require 'company)
 (add-hook 'c++-mode-hook 'irony-mode)
@@ -109,7 +110,7 @@
 	 (define-key c++-mode-map (kbd "C-c m") 'compile)
 	 (define-key c++-mode-map (kbd "C-c f") 'clang-format-buffer)
 	 (define-key c++-mode-map (kbd "C-c o") 'm-switch-decl-impl)))
-	 
+
 
 (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
 (add-hook 'irony-mode-hook 'company-irony-setup-begin-commands)
@@ -118,7 +119,8 @@
 (defun m-c-mode-looks ()
   (linum-mode)
   (column-number-mode)
-  (auto-fill-mode 80))
+  (auto-fill-mode 80)
+  (google-set-c-style))
 (add-hook 'c++-mode-hook 'm-c-mode-looks)
 
 (eval-after-load 'flycheck
