@@ -1,4 +1,6 @@
-;; ------------ OS custom ------------
+;; OS
+;; ==
+
 (if (eq system-type 'windows-nt)
     (progn
       (defconst m-make-command "msbuild")
@@ -7,33 +9,19 @@
     (defconst m-make-command "make")
     (defconst m-c-obj-ext "o")))
 
-;; ------------ Custom Variables ------
-(custom-set-variables
- '(inhibit-startup-screen t)
- '(case-fold-search t)
- '(global-font-lock-mode t nil (font-lock))
- '(mouse-wheel-mode t nil (mwheel))
- '(show-paren-mode t nil (paren))
- '(transient-mark-mode t)
- '(uniquify-buffer-name-style (quote forward) nil (uniquify))
- '(desktop-buffers-not-to-save "\\(^nn\\.a[0-9]+\\|\\.log\\|(ftp)\\|.*_flymake.*\\)$")
- '(desktop-files-not-to-save "^/[^/:]*:\\|.*_flymake\\..*")
-;; '(x-select-enable-clipboard nil)
-)
-
+;; Packages
+;; ========
 
 (require 'package) ;; You might already have this line
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.org/packages/") t)
 
-;;(when (< emacs-major-version 24)
-  ;; For important compatibility libraries like cl-lib
-;;  (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
-
 (package-initialize)
-
-(setq package-list '(google-c-style yasnippet function-args auto-complete cmake-mode clang-format
-                                    irony company-irony flycheck-irony irony-eldoc column-enforce-mode))
+(setq package-list '(cmake-ide
+					 irony company-irony company-irony-c-headers flycheck-irony
+					 flycheck
+					 elpy py-autopep8 ein
+					 magit))
 
 ; fetch the list of packages available
 (unless package-archive-contents
@@ -44,39 +32,39 @@
   (unless (package-installed-p package)
     (package-install package)))
 
-;; -------------------- Extra loads  --------------------------
-(if (not (boundp 'emacs-d-dir))
-    (defconst emacs-d-dir "~/.emacs.d"))
-(add-to-list 'load-path (concat emacs-d-dir "/color-themes"))
+;; UI
+;; ==
 
-;; ------------------ UI ---------------------------------
 (menu-bar-mode 0)
 (tool-bar-mode 0)
 (scroll-bar-mode 0)
 (setq visible-bell t)
-(require 'firecode-theme)
+(require 'meacupla-theme)
 
-;; --------------------- File -------------------------
+;; Files
+;; =====
+
 (set-buffer-file-coding-system 'utf-8 'utf-8-unix)
 (set-default buffer-file-coding-system 'utf-8-unix)
 (set-default-coding-systems 'utf-8-unix)
 (set-default default-buffer-file-coding-system 'utf-8-unix)
 (prefer-coding-system 'utf-8-unix)
-
-(add-hook 'before-save-hook '(lambda () (whitespace-cleanup)))
 (setq-default tab-width 4)
 
 
-;; ------------------ Backup and Autosaves --------------------------------
+;; Backup and Autosaves
+;; --------------------
+
 (setq backup-directory-alist
       `((".*" . ,temporary-file-directory)))
 (setq auto-save-file-name-transforms
       `((".*" ,temporary-file-directory t)))
-;; ------------------- C++ Functions ----------------------------
-(require 'cmake-mode)
-(add-to-list 'auto-mode-alist '("CMakeLists\\.txt\\'" . cmake-mode))
-(add-to-list 'auto-mode-alist '("\\.cmake\\'" . cmake-mode))
-(autoload 'magit-status "magit" nil t)
+
+;; C++
+;; ===
+
+;; Helper functions
+;; ----------------
 
 (defun m-compile-unit ()
   (interactive)
@@ -89,7 +77,7 @@
 (setq compile-command m-make-command)
 
 ;; Switch fromm *.<impl> to *.<head> and vice versa
-(defun switch-decl-impl ()
+(defun m-switch-decl-impl ()
   (interactive)
   (when (file-name-extension buffer-file-name)
     (let* ((file-dir (file-name-directory buffer-file-name))
@@ -97,7 +85,7 @@
            (file-suffix (file-name-extension buffer-file-name))
            (decl-suffixes '(".h" ".hpp" ".hh" ".vert"))
            (impl-suffixes '(".c" ".cpp" ".cc" ".C" ".frag" ".cu" ".cl"))
-           (search-dirs '("" "../src" "../include" "../include/ud" "../../src"))
+           (search-dirs '("" "../src" "../include" "../include/shapelab" "../../src"))
            (chck-suffixes (cond ((string-match file-suffix (mapconcat 'identity impl-suffixes "\\|"))
                                  decl-suffixes)
                                 ((string-match file-suffix (mapconcat 'identity decl-suffixes "\\|"))
@@ -108,71 +96,62 @@
                 (if (file-exists-p cur-filename)
                     (find-file cur-filename))))))))
 
-;; ------------------- C++ coding preferences ----------------
-(require 'cc-mode)
-(c-add-style "Google" google-c-style)
+; C++ Mode
+; --------
 
-(setq c-default-style '((c++-mode . "google") (c-mode . "google")))
-(setq-default indent-tabs-mode nil)
+(require 'company)
+(add-hook 'c++-mode-hook 'irony-mode)
+(add-hook 'c++-mode-hook 'company-mode)
+(eval-after-load "cc-mode"
+  '(progn
+	 (define-key c++-mode-map [M-return] 'company-complete)
+	 (define-key c++-mode-map (kbd "C-c n") 'm-compile-unit)
+	 (define-key c++-mode-map (kbd "C-c m") 'compile)
+	 (define-key c++-mode-map (kbd "C-c f") 'clang-format-buffer)
+	 (define-key c++-mode-map (kbd "C-c o") 'm-switch-decl-impl)))
+	 
 
-(defun my-c-mode-hook ()
-  (setq indent-tabs-mode nil)
-  (local-set-key (kbd "C-c o") 'switch-decl-impl)
+(add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+(add-hook 'irony-mode-hook 'company-irony-setup-begin-commands)
+(add-hook 'c++-mode-hook 'flycheck-mode)
+
+(defun m-c-mode-looks ()
   (linum-mode)
   (column-number-mode)
-  (auto-fill-mode 80)
-  (irony-mode)
-  (flycheck-mode)
-  (abbrev-mode)
-  (column-enforce-mode)
-  (company-mode)
-  )
-
-(add-hook 'c-mode-common-hook 'my-c-mode-hook)
-(add-hook 'c++-mode-common-hook 'my-c-mode-hook)
-
-(eval-after-load 'company
-  '(add-to-list 'company-backends 'company-irony))
-(add-hook 'irony-mode-hook 'company-irony-setup-begin-commands)
-(add-hook 'irony-mode-hook 'irony-eldoc)
+  (auto-fill-mode 80))
+(add-hook 'c++-mode-hook 'm-c-mode-looks)
 
 (eval-after-load 'flycheck
-  '(add-to-list 'flycheck-checkers 'irony))
+  '(add-hook 'flycheck-mode-hook #'flycheck-irony-setup))
 
-(setq irony-additional-clang-options (quote ("-std=c++11" "-stdlib=libc++")))
+(require 'company-irony-c-headers)
+(eval-after-load 'company
+  '(add-to-list
+    'company-backends '(company-irony-c-headers company-irony)))
 
-(setq gdb-many-windows t)
+;; Python mode
+;; ===========
 
-;; ----------------------- Python programming --------------------------
-(setq
- python-shell-interpreter "ipython"
- python-shell-interpreter-args "--pylab"
- python-shell-prompt-regexp "In \\[[0-9]+\\]: "
- python-shell-prompt-output-regexp "Out\\[[0-9]+\\]: "
- python-shell-completion-setup-code
-   "from IPython.core.completerlib import module_completion"
- python-shell-completion-module-string-code
-   "';'.join(module_completion('''%s'''))\n"
- python-shell-completion-string-code
-   "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
+(elpy-enable)
+(elpy-use-ipython "ipython2")
+(setq python-shell-interpreter "ipython2" python-shell-interpreter-args "--simple-prompt --pprint")
 
-;; ------------------- Key bindings ---------------------------
-(global-set-key [f2] 'eshell)
+(when (require 'flycheck nil t)
+  (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+  (add-hook 'elpy-mode-hook 'flycheck-mode))
+
+(require 'py-autopep8)
+(add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
+(add-hook 'elpy-mode-hook (flycheck-select-checker "python-pylint"))
+
+;; Javascript mode
+;; ===============
+
+
+;; Global Key bindings
+;; ===================
+
 (global-set-key [f3] 'ispell-region)
-(global-set-key [f4] 'man)
-(if (eq system-type 'darwin)
-    (progn
-      (global-set-key [f5] 'previous-error)
-      (global-set-key [f6] 'next-error)
-      (global-set-key [f7] 'compile))
-  (progn
-    (global-set-key [f9] 'previous-error)
-    (global-set-key [f10] 'next-error)
-    (global-set-key [f11] 'compile)))
-(global-set-key "\C-x\C-c" 'compile)
-(global-set-key "\C-x\C-z" 'm-compile-unit)
-(global-set-key (kbd "s-r") 'flymake-display-err-menu-for-current-line)
-(global-set-key (kbd "s-c") 'flymake-compile)
-(global-set-key "\C-x\C-b" 'electric-buffer-list)
-(global-set-key "\C-x\C-b" 'electric-buffer-list)
-(global-set-key (kbd "C-c RET") 'company-complete-common)
+(global-set-key [S-dead-grave] "`")
+
+
