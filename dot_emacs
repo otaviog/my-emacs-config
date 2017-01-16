@@ -107,10 +107,10 @@
   '(progn
 	 (define-key c++-mode-map [M-return] 'company-complete)
 	 (define-key c++-mode-map (kbd "C-c n") 'm-compile-unit)
-	 (define-key c++-mode-map (kbd "C-c m") 'compile)
 	 (define-key c++-mode-map (kbd "C-c f") 'clang-format-buffer)
 	 (define-key c++-mode-map (kbd "C-c o") 'm-switch-decl-impl)))
 
+(global-set-key (kbd "C-c m") 'compile)
 
 (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
 (add-hook 'irony-mode-hook 'company-irony-setup-begin-commands)
