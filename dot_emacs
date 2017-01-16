@@ -21,7 +21,7 @@
 					 irony company-irony company-irony-c-headers flycheck-irony
 					 flycheck
 					 elpy py-autopep8 ein
-					 google-style
+					 google-c-style
 					 magit))
 
 										; fetch the list of packages available
@@ -135,8 +135,8 @@
 ;; ===========
 
 (elpy-enable)
-(elpy-use-ipython "ipython2")
-(setq python-shell-interpreter "ipython2" python-shell-interpreter-args "--simple-prompt --pprint")
+(elpy-use-ipython "ipython")
+(setq python-shell-interpreter "ipython" python-shell-interpreter-args "--simple-prompt --pprint")
 
 (when (require 'flycheck nil t)
   (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
@@ -144,7 +144,9 @@
 
 (require 'py-autopep8)
 (add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
-(add-hook 'elpy-mode-hook (flycheck-select-checker "python-pylint"))
+;; not all setups have pylint
+(ignore-errors
+  (add-hook 'elpy-mode-hook (flycheck-select-checker "python-pylint")))
 
 ;; Javascript mode
 ;; ===============
@@ -155,5 +157,7 @@
 
 (global-set-key [f3] 'ispell-region)
 (global-set-key [S-dead-grave] "`")
+(global-set-key [f5] 'previous-error)
+(global-set-key [f6] 'next-error)
 
 
