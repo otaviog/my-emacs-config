@@ -143,10 +143,18 @@
   (add-hook 'elpy-mode-hook 'flycheck-mode))
 
 (require 'py-autopep8)
-(add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
+;;(add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
 ;; not all setups have pylint
-(ignore-errors
-  (add-hook 'elpy-mode-hook (flycheck-select-checker "python-pylint")))
+;;(ignore-errors
+;;(add-hook 'elpy-mode-hook (flycheck-select-checker "python-pylint"))
+;;)
+
+(add-hook 'python-mode-hook
+          (lambda ()
+			(define-key python-mode-map [M-return] 'company-complete)
+			(define-key python-mode-map (kbd "C-c f") 'py-autopep8)
+		  ))
+
 
 ;; Javascript mode
 ;; ===============
