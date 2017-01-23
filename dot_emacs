@@ -148,8 +148,16 @@
 	 (define-key python-mode-map (kbd "C-c f") 'py-autopep8)))
 			 
 ;; not all setups have pylint
-(ignore-errors
-  (add-hook 'elpy-mode-hook (flycheck-select-checker "python-pylint")))
+;;(ignore-errors
+;;(add-hook 'elpy-mode-hook (flycheck-select-checker "python-pylint"))
+;;)
+
+(add-hook 'python-mode-hook
+          (lambda ()
+			(define-key python-mode-map [M-return] 'company-complete)
+			(define-key python-mode-map (kbd "C-c f") 'py-autopep8)
+		  ))
+
 
 ;; Javascript mode
 ;; ===============
