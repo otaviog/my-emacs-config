@@ -20,8 +20,9 @@
 (setq package-list '(cmake-ide
 					 irony company-irony company-irony-c-headers flycheck-irony
 					 flycheck
-					 elpy py-autopep8 ein
+					 elpy py-autopep8 ein jedi
 					 google-c-style
+					 clang-format
 					 magit))
 
 										; fetch the list of packages available
@@ -40,7 +41,7 @@
 (tool-bar-mode 0)
 (scroll-bar-mode 0)
 (setq visible-bell t)
-;;(load-theme 'deeper-blue)
+(load-theme 'misterioso)
 
 ;; Files
 ;; =====
@@ -134,6 +135,7 @@
 ;; Python mode
 ;; ===========
 
+(setq elpy-rpc-backend "jedi")
 (elpy-enable)
 (elpy-use-ipython "ipython")
 (setq python-shell-interpreter "ipython" python-shell-interpreter-args "--simple-prompt --pprint")
@@ -141,6 +143,7 @@
 (when (require 'flycheck nil t)
   (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
   (add-hook 'elpy-mode-hook 'flycheck-mode))
+
 
 (require 'py-autopep8)
 (eval-after-load "python-mode"
