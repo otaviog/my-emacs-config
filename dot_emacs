@@ -22,7 +22,7 @@
 					 flycheck
 					 elpy py-autopep8 ein
 					 google-c-style
-					 magit))
+					 magit flyspell-correct-popup synonyms))
 
 										; fetch the list of packages available
 (unless package-archive-contents
@@ -40,7 +40,8 @@
 (tool-bar-mode 0)
 (scroll-bar-mode 0)
 (setq visible-bell t)
-;;(load-theme 'deeper-blue)
+(load-theme 'tango)
+
 
 ;; Files
 ;; =====
@@ -162,6 +163,14 @@
 ;; Javascript mode
 ;; ===============
 
+
+;; Latex
+;; ===============
+
+(require 'doc-view)
+(add-hook 'doc-view-mode-hook 'auto-revert-mode)
+(setq doc-view-resolution 300)
+(add-hook 'latex-mode-hook 'flyspell-mode)
 
 ;; Global Key bindings
 ;; ===================
