@@ -17,14 +17,15 @@
              '("melpa" . "http://melpa.org/packages/") t)
 
 (package-initialize)
-(setq package-list '(cmake-ide
-					 irony company-irony company-irony-c-headers flycheck-irony
-					 flycheck
-					 elpy py-autopep8 ein
-					 google-c-style
-					 magit flyspell-correct-popup synonyms))
+(setq package-list '(cmake-ide solarized-theme
+			       irony company-irony company-irony-c-headers flycheck-irony
+			       flycheck
+			       elpy py-autopep8 ein jedi
+			       google-c-style clang-format
+			       magit flyspell-correct-popup synonyms))
 
-										; fetch the list of packages available
+
+					; fetch the list of packages available
 (unless package-archive-contents
   (package-refresh-contents))
 
@@ -40,8 +41,9 @@
 (tool-bar-mode 0)
 (scroll-bar-mode 0)
 (setq visible-bell t)
-(load-theme 'tango)
 
+(load-theme 'tango)
+(load-theme 'solarized-dark)
 
 ;; Files
 ;; =====
@@ -135,6 +137,7 @@
 ;; Python mode
 ;; ===========
 
+(setq elpy-rpc-backend "jedi")
 (elpy-enable)
 (elpy-use-ipython "ipython")
 (setq python-shell-interpreter "ipython" python-shell-interpreter-args "--simple-prompt --pprint")
@@ -142,6 +145,7 @@
 (when (require 'flycheck nil t)
   (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
   (add-hook 'elpy-mode-hook 'flycheck-mode))
+
 
 (require 'py-autopep8)
 (eval-after-load "python-mode"
