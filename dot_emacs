@@ -20,7 +20,7 @@
 (setq package-list '(cmake-ide
 					 irony company-irony company-irony-c-headers flycheck-irony
 					 flycheck
-					 elpy py-autopep8 ein jedi
+					 elpy py-autopep8 ein jedi cuda-mode
 					 google-c-style
 					 clang-format
 					 magit))
