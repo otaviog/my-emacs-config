@@ -17,15 +17,17 @@
              '("melpa" . "http://melpa.org/packages/") t)
 
 (package-initialize)
-(setq package-list '(cmake-ide
-					 irony company-irony company-irony-c-headers flycheck-irony
-					 flycheck
-					 elpy py-autopep8 ein jedi cuda-mode
-					 google-c-style
-					 clang-format
-					 magit))
 
-										; fetch the list of packages available
+(setq package-list '(cmake-ide solarized-theme
+			       irony company-irony company-irony-c-headers flycheck-irony
+			       flycheck
+			       elpy py-autopep8 ein jedi
+			       google-c-style clang-format cuda-mode
+			       magit flyspell-correct-popup synonyms))
+
+
+					; fetch the list of packages available
+
 (unless package-archive-contents
   (package-refresh-contents))
 
@@ -41,7 +43,9 @@
 (tool-bar-mode 0)
 (scroll-bar-mode 0)
 (setq visible-bell t)
-(load-theme 'misterioso)
+
+(load-theme 'tango)
+(load-theme 'solarized-dark)
 
 ;; Files
 ;; =====
@@ -165,6 +169,14 @@
 ;; Javascript mode
 ;; ===============
 
+
+;; Latex
+;; ===============
+
+(require 'doc-view)
+(add-hook 'doc-view-mode-hook 'auto-revert-mode)
+(setq doc-view-resolution 300)
+(add-hook 'latex-mode-hook 'flyspell-mode)
 
 ;; Global Key bindings
 ;; ===================
