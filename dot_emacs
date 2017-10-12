@@ -17,12 +17,14 @@
              '("melpa" . "http://melpa.org/packages/") t)
 
 (package-initialize)
+(add-to-list 'package-archives
+             '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 (setq package-list '(cmake-ide solarized-theme
 			       irony company-irony company-irony-c-headers flycheck-irony
-			       flycheck
+			       flycheck dracula-theme
 			       elpy py-autopep8 ein jedi
 			       google-c-style clang-format
-			       magit flyspell-correct-popup synonyms))
+			       magit flyspell-correct-popup synonyms powerline))
 
 
 					; fetch the list of packages available
@@ -41,9 +43,9 @@
 (tool-bar-mode 0)
 (scroll-bar-mode 0)
 (setq visible-bell t)
-
-(load-theme 'tango)
-(load-theme 'solarized-dark)
+(load-theme 'dracula t)
+(powerline-default-theme)
+(windmove-default-keybindings)
 
 ;; Files
 ;; =====
