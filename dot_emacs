@@ -25,7 +25,7 @@
 			       flycheck dracula-theme
 			       elpy py-autopep8 ein jedi
 			       google-c-style clang-format cuda-mode
-			       magit flyspell-correct-popup synonyms powerline))
+			       magit flyspell-correct-popup powerline))
 
 
 ;; fetch the list of packages available
@@ -144,8 +144,9 @@
 
 (setq elpy-rpc-backend "jedi")
 (elpy-enable)
-(elpy-use-ipython "ipython")
-(setq python-shell-interpreter "ipython" python-shell-interpreter-args "--simple-prompt --pprint")
+
+(setq python-shell-interpreter "ipython"
+      python-shell-interpreter-args "-i --simple-prompt")
 
 (when (require 'flycheck nil t)
   (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
