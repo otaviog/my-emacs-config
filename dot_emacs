@@ -55,7 +55,7 @@
 (set-buffer-file-coding-system 'utf-8 'utf-8-unix)
 (set-default buffer-file-coding-system 'utf-8-unix)
 (set-default-coding-systems 'utf-8-unix)
-(set-default default-buffer-file-coding-system 'utf-8-unix)
+;; (set-default default-buffer-file-coding-system 'utf-8-unix)
 (prefer-coding-system 'utf-8-unix)
 (setq-default tab-width 4)
 
@@ -153,10 +153,7 @@
   (add-hook 'elpy-mode-hook 'flycheck-mode))
 
 
-(require 'py-autopep8)
-(eval-after-load "python-mode"
-  '(progn
-	 (define-key python-mode-map (kbd "C-c f") 'py-autopep8)))
+(require 'py-autopep8)	 
 			 
 ;; not all setups have pylint
 ;;(ignore-errors
@@ -165,8 +162,8 @@
 
 (add-hook 'python-mode-hook
           (lambda ()
-			(define-key python-mode-map [M-return] 'company-complete)
-			(define-key python-mode-map (kbd "C-c f") 'py-autopep8)
+			(define-key python-mode-map [?\M-\r] 'company-complete)
+			(define-key python-mode-map (kbd "C-c f") 'py-autopep8-buffer)
 		  ))
 
 
